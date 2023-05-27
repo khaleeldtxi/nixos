@@ -1,6 +1,8 @@
 setfont ter-v22b
 clear
 
+sudo -s
+
 echo -ne "
 -------------------------------------------------------------------------
                           Disk Preparation
@@ -80,7 +82,7 @@ fi
 
 # Create boot pool
 # shellcheck disable=SC2046
-zpool create \
+zpool create -f \
     -o compatibility=grub2 \
     -o ashift=12 \
     -o autotrim=on \
@@ -95,12 +97,12 @@ zpool create \
     -R "${MNT}" \
     bpool \
     $(for i in ${DISK}; do
-       printf '%s ' "${i}-part2";
+       printf '%s ' "${i}p2";
     done)
       
 # Create root pool
 # shellcheck disable=SC2046
-zpool create \
+zpool create -f \
     -o ashift=12 \
     -o autotrim=on \
     -R "${MNT}" \
@@ -114,7 +116,7 @@ zpool create \
     -O mountpoint=/ \
     rpool \
     $(for i in ${DISK}; do
-      printf '%s ' "${i}-part3";
+      printf '%s ' "${i}p3";
      done)
 
 #Create root system container:
@@ -145,9 +147,9 @@ zfs snapshot rpool/nixos/empty@start
 
 # Format and mount ESP
 for i in ${DISK}; do
- mkfs.vfat -n EFI "${i}"-part1
- mkdir -p "${MNT}"/boot/efis/"${i##*/}"-part1
- mount -t vfat -o iocharset=iso8859-1 "${i}"-part1 "${MNT}"/boot/efis/"${i##*/}"-part1
+ mkfs.vfat -n EFI "${i}"p1
+ mkdir -p "${MNT}"/boot/efis/"${i##*/}"p1
+ mount -t vfat -o iocharset=iso8859-1 "${i}"p1 "${MNT}"/boot/efis/"${i##*/}"p1
 done
 
 
