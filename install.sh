@@ -52,8 +52,7 @@ if [[ "$response" =~ ^(yes|y)$ ]]; then
     
     partition_disk () {
     local disk="${1}"
-    blkdiscard -f "${disk}" || true
-
+    
     parted --script --align=optimal  "${disk}" -- \
     mklabel gpt \
     mkpart EFI 2MiB 1GiB \
