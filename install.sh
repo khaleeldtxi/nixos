@@ -218,8 +218,8 @@ nixos-install \
 
 
 # Unmount filesystems
-umount -Rl "${MNT}"
-zpool export -a
+#umount -Rl "${MNT}"
+#zpool export -a
 
 # Reboot
-reboot
+#reboot
